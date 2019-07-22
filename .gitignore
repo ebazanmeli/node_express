@@ -1,0 +1,5 @@
+#ignorar la carpeta .idea
+.idea
+
+#ignorar la carpeta node_module
+node_module
