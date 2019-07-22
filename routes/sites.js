@@ -1,26 +1,12 @@
 var express = require('express');
-var request = require("request");
 var router = express.Router();
 
+var SiteController = require("../controllers/sites");
+
 /* GET sites listing. */
-router.get('/', function(req, res) {
-    request.get("https://api.mercadolibre.com/sites", function (error, response, body) {
-        if(error) {
-            res.send(error);
-        }
-        res.send(JSON.parse(body));
-    });
-});
+router.get('/sites', SiteController.getSites);
 
 /* GET site specific by id. */
-router.get('/:id', function(req, res) {
-    var id = req.params.id;
-    request.get("https://api.mercadolibre.com/sites/" + id, function (error, response, body) {
-        if(error) {
-            res.send(error);
-        }
-        res.send(JSON.parse(body));
-    });
-});
+router.get('/sites/:id', SiteController.getSite);
 
 module.exports = router;
