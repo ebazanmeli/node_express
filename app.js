@@ -3,11 +3,13 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var sitesRouter = require('./routes/sites');
 var paymentRouter = require('./routes/payment');
+var agencieRouter = require('./routes/agencies');
 
 var app = express();
 
@@ -21,10 +23,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//configurar cabeceras http
+app.use(cors());
+
 app.use('/api', indexRouter);
 app.use('/api', usersRouter);
 app.use('/api', sitesRouter);
 app.use('/api', paymentRouter);
+app.use('/api', agencieRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
