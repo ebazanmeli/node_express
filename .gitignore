@@ -2,4 +2,4 @@
 .idea
 
 #ignorar la carpeta node_module
-./node_module
+/node_modules

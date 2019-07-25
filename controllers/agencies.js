@@ -73,17 +73,17 @@ function getAgencies(req, res) {
                     case "address_line":
                         jsonFile.results.sort(function (a, b) {
                             if(criterio === "ASC") {
-                                if (a.address.address_line > b.address.address_line) {
+                                if (a.address.address_line.toLowerCase() > b.address.address_line.toLowerCase()) {
                                     return 1;
                                 }
-                                if (a.address.address_line < b.address.address_line) {
+                                if (a.address.address_line.toLowerCase() < b.address.address_line.toLowerCase()) {
                                     return -1;
                                 }
                             } else if(criterio === "DESC") {
-                                if (b.address.address_line > a.address.address_line) {
+                                if (b.address.address_line.toLowerCase() > a.address.address_line.toLowerCase()) {
                                     return 1;
                                 }
-                                if (b.address.address_line < a.address.address_line) {
+                                if (b.address.address_line.toLowerCase() < a.address.address_line.toLowerCase()) {
                                     return -1;
                                 }
                             }
