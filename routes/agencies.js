@@ -15,4 +15,7 @@ router.post('/agencies', AgencieController.saveAgencie);
 //ELIMINAR una agencia de la lista de agencias recomendadas
 router.delete('/agencies/:id', AgencieController.removeAgencie);
 
+//GET ALL agencias recomendadas
+router.get('/agencies-recomended', AgencieController.getAgenciesRecomended);
+
 module.exports = router;

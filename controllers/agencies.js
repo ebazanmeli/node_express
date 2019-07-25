@@ -11,6 +11,8 @@ function getAgencies(req, res) {
     var radius = req.query.radius;
     var limit = req.query.limit;
     var offset = req.query.offset;
+    var orderby = req.query.orderby;
+    var criterio = req.query.criterio;
 
     var urlAPI;
 
@@ -58,8 +60,60 @@ function getAgencies(req, res) {
 
         fs.writeFileSync('search.txt', body);
 
-        console.log(JSON.parse(body));
-        res.send(JSON.parse(body));
+        var jsonFile = null;
+        //ordenar archivo y responder dicho resultado
+        fs.readFile('search.txt', 'utf-8', (err, data) => {
+            if(err) {
+                console.log('error: ', err);
+                res.send({"message": "Error cuando se quiere leer el archivo. " + err});
+            } else {
+                jsonFile = JSON.parse(data);
+
+                switch(orderby) {
+                    case "address_line":
+                        jsonFile.results.sort(function (a, b) {
+                            if(criterio === "ASC") {
+                                if (a.address.address_line > b.address.address_line) {
+                                    return 1;
+                                }
+                                if (a.address.address_line < b.address.address_line) {
+                                    return -1;
+                                }
+                            } else if(criterio === "DESC") {
+                                if (b.address.address_line > a.address.address_line) {
+                                    return 1;
+                                }
+                                if (b.address.address_line < a.address.address_line) {
+                                    return -1;
+                                }
+                            }
+                            // a must be equal to b
+                            return 0;
+                        });
+                        break;
+                    case "agency_code":
+                        jsonFile.results.sort(function(a, b) {
+                            if(criterio === "ASC") {
+                                return a.agency_code - b.agency_code;
+                            } else if (criterio === "DESC") {
+                                return b.agency_code - a.agency_code;
+                            }
+                        });
+                        break;
+                    case "distance":
+                        jsonFile.results.sort(function(a, b) {
+                            if(criterio === "ASC") {
+                                return a.distance - b.distance;
+                            } else if (criterio === "DESC") {
+                                return b.distance - a.distance;
+                            }
+                        });
+                        break;
+                }
+            }
+            res.send(jsonFile);
+        });
+
     });
 
 }
@@ -161,9 +215,24 @@ function removeAgencie(req, res) {
     }
 }
 
+function getAgenciesRecomended(req, res) {
+    if (fs.existsSync("agencias-recomendadas.json")) {
+        fs.readFile('agencias-recomendadas.json', 'utf-8', (err, data) => {
+            if(err) {
+                console.log('error: ', err);
+            } else {
+                res.send(data);
+            }
+        });
+    } else {
+        res.send({"message": "No hay lista de agencias recomendadas."});
+    }
+}
+
 module.exports = {
     getAgencies,
     getAgencie,
     saveAgencie,
-    removeAgencie
+    removeAgencie,
+    getAgenciesRecomended
 }
